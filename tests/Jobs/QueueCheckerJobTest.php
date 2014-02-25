@@ -8,6 +8,7 @@ use Mockery as m;
 class QueueCheckerJobTest extends TestCase
 {
     private $queueCheckerJob;
+    private $taskMock;
 
     public function setUp()
     {
@@ -16,6 +17,9 @@ class QueueCheckerJobTest extends TestCase
         Cache::put('queue-checker-job-value', 0, 0);
 
         $this->queueCheckerJob = new QueueCheckerJob();
+
+        $this->taskMock = m::mock();
+        $this->taskMock->shouldReceive('delete');
     }
 
     public function tearDown()
@@ -27,7 +31,7 @@ class QueueCheckerJobTest extends TestCase
     {
         $jobValueBeforeExecution = Cache::get('queue-checker-job-value');
 
-        $this->queueCheckerJob->fire('', $jobValueBeforeExecution);
+        $this->queueCheckerJob->fire($this->taskMock, $jobValueBeforeExecution);
 
         $jobValueAfterExecution = Cache::get('queue-checker-job-value');
         $expectedJobValueAfterExecution = $jobValueBeforeExecution + 1;
