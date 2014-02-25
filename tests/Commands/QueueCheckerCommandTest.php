@@ -79,7 +79,7 @@ class QueueCheckerCommandTest extends TestCase
     private function mockQueue()
     {
         $jobData = array(
-            'valueToIncrease' => Cache::get('queue-checker-job-value')
+            'jobValue' => Cache::get('queue-checker-job-value')
             );
 
         Queue::shouldReceive('push')->with('Schickling\QueueChecker\Jobs\QueueCheckerJob', $jobData)->once();

@@ -29,16 +29,9 @@ class QueueCheckerJobTest extends TestCase
 
     public function testJobIncreaseValue()
     {
-        $jobData = array(
-            'valueToIncrease' => Cache::get('queue-checker-job-value')
-            );
+        $this->queueCheckerJob->fire($this->taskMock, ['jobValue' => 1]);
 
-        $this->queueCheckerJob->fire($this->taskMock, $jobData);
-
-        $jobValueAfterExecution = Cache::get('queue-checker-job-value');
-        $expectedJobValueAfterExecution = $jobValueBeforeExecution + 1;
-
-        $this->assertEquals($expectedJobValueAfterExecution, $jobValueAfterExecution);
+        $this->assertEquals(1, Cache::get('queue-checker-job-value'));
     }
 
 
