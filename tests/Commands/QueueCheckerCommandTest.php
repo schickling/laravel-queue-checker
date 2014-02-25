@@ -41,7 +41,7 @@ class QueueCheckerCommandTest extends TestCase
 
     }
 
-    public function testJobIncreaseValue()
+    public function testQueueIncreaseValue()
     {
         $queueValueBeforeExecution = Cache::get('queue-checker-command-value');
 
