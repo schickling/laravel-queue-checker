@@ -10,6 +10,8 @@ class QueueCheckerJob
 		$jobValue = $data + 1;
 		Cache::put('queue-checker-job-value', $jobValue, 0);
 
+		$task->delete();
+
 	}
 
 }
