@@ -14,8 +14,6 @@ class QueueCheckerJobTest extends TestCase
     {
         parent::setUp();
 
-        Cache::put('queue-checker-job-value', 0, 0);
-
         $this->queueCheckerJob = new QueueCheckerJob();
 
         $this->taskMock = m::mock();
@@ -29,6 +27,8 @@ class QueueCheckerJobTest extends TestCase
 
     public function testJobIncreaseValue()
     {
+        Cache::put('queue-checker-job-value', 0, 0);
+
         $this->queueCheckerJob->fire($this->taskMock, ['jobValue' => 1]);
 
         $this->assertEquals(1, Cache::get('queue-checker-job-value'));

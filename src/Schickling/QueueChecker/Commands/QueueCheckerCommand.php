@@ -21,8 +21,9 @@ class QueueCheckerCommand extends Command
 
 		if ($jobValue == $queueValue)
 		{
+            $jobValue++;
 			Queue::push('Schickling\QueueChecker\Jobs\QueueCheckerJob', ['jobValue' => $jobValue]);
-			Cache::put('queue-checker-command-value', $queueValue + 1, 0);
+			Cache::put('queue-checker-command-value', $jobValue, 0);
 		}
 		else
 		{

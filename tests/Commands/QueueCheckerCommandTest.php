@@ -25,14 +25,14 @@ class QueueCheckerCommandTest extends TestCase
 
     public function testJobPushedToQueue()
     {
-        $this->mockQueue();
+        Queue::shouldReceive('push')->with('Schickling\QueueChecker\Jobs\QueueCheckerJob', ['jobValue' => 1])->once();
 
         $this->tester->execute(array());
     }
 
     public function testCacheGetsInitialized()
     {
-        $this->mockQueue();
+        Queue::shouldReceive('push')->with('Schickling\QueueChecker\Jobs\QueueCheckerJob', ['jobValue' => 1])->once();
 
         $this->tester->execute(array());
 
@@ -44,7 +44,7 @@ class QueueCheckerCommandTest extends TestCase
     {
         Cache::put('queue-checker-command-value', 2, 0);
         Cache::put('queue-checker-job-value', 2, 0);
-        $this->mockQueue();
+        Queue::shouldReceive('push')->with('Schickling\QueueChecker\Jobs\QueueCheckerJob', ['jobValue' => 3])->once();
 
         $this->tester->execute(array());
 
@@ -74,15 +74,6 @@ class QueueCheckerCommandTest extends TestCase
         Cache::put('queue-checker-job-value', 2, 0);
 
         $this->tester->execute(array());
-    }
-
-    private function mockQueue()
-    {
-        $jobData = array(
-            'jobValue' => Cache::get('queue-checker-job-value')
-            );
-
-        Queue::shouldReceive('push')->with('Schickling\QueueChecker\Jobs\QueueCheckerJob', $jobData)->once();
     }
 
 }
