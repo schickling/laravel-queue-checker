@@ -12,7 +12,11 @@ class QueueCheckerCommandTest extends TestCase
     public function setUp()
     {
         parent::setUp();
+
         Cache::flush();
+
+        // TODO remove quick fix
+        Queue::shouldReceive('connection');
 
         $command = new QueueCheckerCommand();
         $this->tester = new CommandTester($command);
