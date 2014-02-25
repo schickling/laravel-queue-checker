@@ -23,9 +23,18 @@ class QueueCheckerCommandTest extends TestCase
         m::close();
     }
 
+    public function testFailsForNotRunningQueue()
+    {
+        Queue::shouldReceive('connected')->once()->andReturn(false);
+        $this->setExpectedException('Exception');
+
+        $this->tester->execute(array());
+    }
+
     public function testJobPushedToQueue()
     {
         Queue::shouldReceive('push')->with('Schickling\QueueChecker\Jobs\QueueCheckerJob', ['jobValue' => 1])->once();
+        Queue::shouldReceive('connected')->once()->andReturn(true);
 
         $this->tester->execute(array());
     }
@@ -33,6 +42,7 @@ class QueueCheckerCommandTest extends TestCase
     public function testCacheGetsInitialized()
     {
         Queue::shouldReceive('push')->with('Schickling\QueueChecker\Jobs\QueueCheckerJob', ['jobValue' => 1])->once();
+        Queue::shouldReceive('connected')->once()->andReturn(true);
 
         $this->tester->execute(array());
 
@@ -45,6 +55,7 @@ class QueueCheckerCommandTest extends TestCase
         Cache::put('queue-checker-command-value', 2, 0);
         Cache::put('queue-checker-job-value', 2, 0);
         Queue::shouldReceive('push')->with('Schickling\QueueChecker\Jobs\QueueCheckerJob', ['jobValue' => 3])->once();
+        Queue::shouldReceive('connected')->once()->andReturn(true);
 
         $this->tester->execute(array());
 
@@ -57,6 +68,7 @@ class QueueCheckerCommandTest extends TestCase
         Cache::put('queue-checker-command-value', 999999, 0);
         Cache::put('queue-checker-job-value', 999999, 0);
         Queue::shouldReceive('push')->with('Schickling\QueueChecker\Jobs\QueueCheckerJob', ['jobValue' => 0])->once();
+        Queue::shouldReceive('connected')->once()->andReturn(true);
 
         $this->tester->execute(array());
 
@@ -73,6 +85,8 @@ class QueueCheckerCommandTest extends TestCase
         Cache::put('queue-checker-command-value', 2, 0);
         Cache::put('queue-checker-job-value', 3, 0);
 
+        Queue::shouldReceive('connected')->once()->andReturn(true);
+
         $this->tester->execute(array());
     }
 
@@ -84,6 +98,8 @@ class QueueCheckerCommandTest extends TestCase
 
         Cache::put('queue-checker-command-value', 3, 0);
         Cache::put('queue-checker-job-value', 2, 0);
+
+        Queue::shouldReceive('connected')->once()->andReturn(true);
 
         $this->tester->execute(array());
     }

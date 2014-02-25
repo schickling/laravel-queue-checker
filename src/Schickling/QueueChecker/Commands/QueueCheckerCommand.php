@@ -4,6 +4,7 @@ use Illuminate\Console\Command;
 use Cache;
 use Queue;
 use App;
+use Exception;
 
 class QueueCheckerCommand extends Command
 {
@@ -14,6 +15,7 @@ class QueueCheckerCommand extends Command
 
 	public function fire()
 	{
+        $this->checkIfQueueIsConnected();
 		$this->checkIfCacheWasInitialized();
 
 		$jobValue = Cache::get('queue-checker-job-value');
@@ -33,6 +35,14 @@ class QueueCheckerCommand extends Command
 		}
 
 	}
+
+    private function checkIfQueueIsConnected()
+    {
+        if ( ! Queue::connected() )
+        {
+            throw new Exception('Queue server is not connected');
+        }
+    }
 
 	private function checkIfCacheWasInitialized()
 	{
