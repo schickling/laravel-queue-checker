@@ -1,6 +1,6 @@
 {
     "name": "schickling/queue-checker",
-    "description": "Check queue for Laravel 4 applications",
+    "description": "Command to check the queue health status",
     "authors": [
         {
             "name": "Johannes Schickling",
