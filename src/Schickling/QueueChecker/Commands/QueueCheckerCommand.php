@@ -8,7 +8,6 @@ use App;
 class QueueCheckerCommand extends Command
 {
 
-
 	protected $name = 'queue:check';
 
 	protected $description = 'Check queue is running';
@@ -22,15 +21,8 @@ class QueueCheckerCommand extends Command
 
 		if ($jobValue == $queueValue)
 		{
-
-			$jobData = array(
-	            'valueToIncrease' => $jobValue
-	            );
-
-			Queue::push('Schickling\QueueChecker\Jobs\QueueCheckerJob', $jobData);
-
+			Queue::push('Schickling\QueueChecker\Jobs\QueueCheckerJob', ['valueToIncrease' => $jobValue]);
 			Cache::put('queue-checker-command-value', $queueValue + 1, 0);
-
 		}
 		else
 		{
@@ -42,12 +34,12 @@ class QueueCheckerCommand extends Command
 
 	private function checkIfCacheWasInitialized()
 	{
-		if (!Cache::has('queue-checker-job-value'))
+		if ( ! Cache::has('queue-checker-job-value'))
 		{
 			Cache::put('queue-checker-job-value', 0, 0);
 		}
 
-		if (!Cache::has('queue-checker-command-value'))
+		if ( ! Cache::has('queue-checker-command-value'))
 		{
 			Cache::put('queue-checker-command-value', 0, 0);
 		}

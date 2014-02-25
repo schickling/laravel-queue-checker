@@ -12,9 +12,7 @@ class QueueCheckerCommandTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-
-        Cache::put('queue-checker-job-value', 0, 0);
-        Cache::put('queue-checker-command-value', 0, 0);
+        Cache::flush();
 
         $command = new QueueCheckerCommand();
         $this->tester = new CommandTester($command);
@@ -25,56 +23,63 @@ class QueueCheckerCommandTest extends TestCase
         m::close();
     }
 
-    public function testSameCacheValues()
-    {
-        $jobValue = Cache::get('queue-checker-job-value');
-        $queueValue = Cache::get('queue-checker-command-value');
-
-        $this->assertEquals($jobValue, $queueValue);
-    }
-
     public function testJobPushedToQueue()
     {
-        $this->fillQueue();
+        $this->mockQueue();
+
+        $this->tester->execute(array());
+    }
+
+    public function testCacheGetsInitialized()
+    {
+        $this->mockQueue();
 
         $this->tester->execute(array());
 
+        $this->assertEquals(1, Cache::get('queue-checker-command-value'));
+        $this->assertEquals(0, Cache::get('queue-checker-job-value'));
     }
 
     public function testQueueIncreaseValue()
     {
-        $queueValueBeforeExecution = Cache::get('queue-checker-command-value');
-
-        $this->fillQueue();
+        Cache::put('queue-checker-command-value', 2, 0);
+        Cache::put('queue-checker-job-value', 2, 0);
+        $this->mockQueue();
 
         $this->tester->execute(array());
 
-        $queueValueAfterExecution = Cache::get('queue-checker-command-value');
-        $expectedQueueValueAfterExecution = $queueValueBeforeExecution + 1;
-
-        $this->assertEquals($expectedQueueValueAfterExecution, $queueValueAfterExecution);
+        $this->assertEquals(3, Cache::get('queue-checker-command-value'));
+        $this->assertEquals(2, Cache::get('queue-checker-job-value'));
     }
 
-    public function testErrorHandling()
+    public function testErrorHandlingWhenJobValueBiggerAsCommandValue()
     {
-
         $errorHandlerMock = m::mock('Schickling\QueueChecker\ErrorHandlers\ErrorHandlerInterface');
         $errorHandlerMock->shouldReceive('handle');
-
         $this->app->instance('Schickling\QueueChecker\ErrorHandlers\ErrorHandlerInterface', $errorHandlerMock);
 
-        $queueValue = Cache::get('queue-checker-command-value');
-        Cache::put('queue-checker-command-value', $queueValue + 1, 0);
+        Cache::put('queue-checker-command-value', 2, 0);
+        Cache::put('queue-checker-job-value', 3, 0);
 
         $this->tester->execute(array());
     }
 
-    private function fillQueue()
+    public function testErrorHandlingWhenCommandValueBiggerAsJobValue()
     {
-        $jobValue = Cache::get('queue-checker-job-value');
+        $errorHandlerMock = m::mock('Schickling\QueueChecker\ErrorHandlers\ErrorHandlerInterface');
+        $errorHandlerMock->shouldReceive('handle');
+        $this->app->instance('Schickling\QueueChecker\ErrorHandlers\ErrorHandlerInterface', $errorHandlerMock);
 
+        Cache::put('queue-checker-command-value', 3, 0);
+        Cache::put('queue-checker-job-value', 2, 0);
+
+        $this->tester->execute(array());
+    }
+
+    private function mockQueue()
+    {
         $jobData = array(
-            'valueToIncrease' => $jobValue
+            'valueToIncrease' => Cache::get('queue-checker-job-value')
             );
 
         Queue::shouldReceive('push')->with('Schickling\QueueChecker\Jobs\QueueCheckerJob', $jobData)->once();
