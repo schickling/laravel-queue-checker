@@ -7,7 +7,7 @@ class QueueCheckerJob
 
 	public function fire($task, $data) {
 
-		$jobValue = $data + 1;
+		$jobValue = $data['valueToIncrease'] + 1;
 		Cache::put('queue-checker-job-value', $jobValue, 0);
 
 		$task->delete();
