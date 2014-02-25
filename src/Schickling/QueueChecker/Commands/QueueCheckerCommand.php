@@ -14,6 +14,9 @@ class QueueCheckerCommand extends Command
 
     public function fire()
     {
+        // TODO remove quick fix
+        Queue::connection();
+
         if (Queue::connected())
         {
             $this->checkIfCacheWasInitialized();
