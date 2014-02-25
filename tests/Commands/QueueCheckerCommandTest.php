@@ -55,6 +55,20 @@ class QueueCheckerCommandTest extends TestCase
         $this->assertEquals($expectedQueueValueAfterExecution, $queueValueAfterExecution);
     }
 
+    public function testErrorHandling() 
+    {
+
+        $errorHandlerMock = m::mock('Schickling\QueueChecker\ErrorHandlers\ErrorHandlerInterface');
+        $errorHandlerMock->shouldReceive('handle');
+
+        $this->app->instance('Schickling\QueueChecker\ErrorHandlers\ErrorHandlerInterface', $errorHandlerMock);
+
+        $queueValue = Cache::get('queue-checker-command-value');
+        Cache::put('queue-checker-command-value', $queueValue + 1, 0);
+
+        $this->tester->execute(array());
+    }
+
     private function fillQueue() 
     {
         $jobValue = Cache::get('queue-checker-job-value');

@@ -3,6 +3,7 @@
 use Illuminate\Console\Command;
 use Cache;
 use Queue;
+use App;
 
 class QueueCheckerCommand extends Command
 {
@@ -33,7 +34,8 @@ class QueueCheckerCommand extends Command
 		}
 		else
 		{
-			//error
+            $errorHandler = App::make('Schickling\QueueChecker\ErrorHandlers\ErrorHandlerInterface');
+            $errorHandler->handle('Queue does not seem to be working.');
 		}
 
 	}
