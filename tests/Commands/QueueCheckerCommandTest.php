@@ -25,8 +25,11 @@ class QueueCheckerCommandTest extends TestCase
 
     public function testFailsForNotRunningQueue()
     {
+        $errorHandlerMock = m::mock('Schickling\QueueChecker\ErrorHandlers\ErrorHandlerInterface');
+        $errorHandlerMock->shouldReceive('handle');
+        $this->app->instance('Schickling\QueueChecker\ErrorHandlers\ErrorHandlerInterface', $errorHandlerMock);
+
         Queue::shouldReceive('connected')->once()->andReturn(false);
-        $this->setExpectedException('Exception');
 
         $this->tester->execute(array());
     }
