@@ -23,7 +23,7 @@ class QueueCheckerCommand extends Command
 		{
             $jobValue++;
 			Queue::push('Schickling\QueueChecker\Jobs\QueueCheckerJob', ['jobValue' => $jobValue]);
-			Cache::put('queue-checker-command-value', $jobValue, 0);
+			Cache::put('queue-checker-command-value', $jobValue, 60);
 		}
 		else
 		{
@@ -37,12 +37,12 @@ class QueueCheckerCommand extends Command
 	{
 		if ( ! Cache::has('queue-checker-job-value'))
 		{
-			Cache::put('queue-checker-job-value', 0, 0);
+			Cache::put('queue-checker-job-value', 0, 60);
 		}
 
 		if ( ! Cache::has('queue-checker-command-value'))
 		{
-			Cache::put('queue-checker-command-value', 0, 0);
+			Cache::put('queue-checker-command-value', 0, 60);
 		}
 	}
 
