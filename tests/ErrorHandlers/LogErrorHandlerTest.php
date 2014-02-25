@@ -1,10 +1,10 @@
 <?php
 
-use Schickling\QueueChecker\Notifiers\LogNotifier;
+use Schickling\QueueChecker\ErrorHandlers\LogErrorHandler;
 use Orchestra\Testbench\TestCase;
 use Mockery as m;
 
-class LogNotifierTest extends TestCase
+class LogErrorHandlerTest extends TestCase
 {
 
     public function tearDown()
@@ -14,11 +14,11 @@ class LogNotifierTest extends TestCase
 
     public function testJobIncreaseValue()
     {
-        $notifier = new LogNotifier();
+        $logErrorHandler = new LogErrorHandler();
 
         Log::shouldReceive('error')->with('test message')->once();
 
-        $notifier->notify('test message');
+        $logErrorHandler->handle('test message');
     }
 
 
