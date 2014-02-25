@@ -15,7 +15,7 @@ class QueueCheckerJobTest extends TestCase
 
         Cache::put('queue-checker-job-value', 0, 0);
 
-        // $this->queueCheckerJob = new QueueCheckerJob();
+        $this->queueCheckerJob = new QueueCheckerJob();
     }
 
     public function tearDown()
@@ -25,14 +25,14 @@ class QueueCheckerJobTest extends TestCase
 
     public function testJobIncreaseValue()
     {
-        // $jobValueBeforeExecution = Cache::get('queue-checker-job-value');
+        $jobValueBeforeExecution = Cache::get('queue-checker-job-value');
 
-        // $this->$queueCheckerJob->fire('', $jobValueBeforeExecution);
+        $this->queueCheckerJob->fire('', $jobValueBeforeExecution);
 
-        // $jobValueAfterExecution = Cache::get('queue-checker-job-value');
-        // $expectedJobValueAfterExecution = $jobValueBeforeExecution + 1;
+        $jobValueAfterExecution = Cache::get('queue-checker-job-value');
+        $expectedJobValueAfterExecution = $jobValueBeforeExecution + 1;
 
-        // $this->assertEquals($expectedJobValueAfterExecution, $jobValueAfterExecution);
+        $this->assertEquals($expectedJobValueAfterExecution, $jobValueAfterExecution);
     }
 
 
