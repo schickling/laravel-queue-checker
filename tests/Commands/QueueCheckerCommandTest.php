@@ -52,6 +52,18 @@ class QueueCheckerCommandTest extends TestCase
         $this->assertEquals(2, Cache::get('queue-checker-job-value'));
     }
 
+    public function testQueueIncreaseValueCyclic()
+    {
+        Cache::put('queue-checker-command-value', 999999, 0);
+        Cache::put('queue-checker-job-value', 999999, 0);
+        Queue::shouldReceive('push')->with('Schickling\QueueChecker\Jobs\QueueCheckerJob', ['jobValue' => 0])->once();
+
+        $this->tester->execute(array());
+
+        $this->assertEquals(0, Cache::get('queue-checker-command-value'));
+        $this->assertEquals(999999, Cache::get('queue-checker-job-value'));
+    }
+
     public function testErrorHandlingWhenJobValueBiggerAsCommandValue()
     {
         $errorHandlerMock = m::mock('Schickling\QueueChecker\ErrorHandlers\ErrorHandlerInterface');
