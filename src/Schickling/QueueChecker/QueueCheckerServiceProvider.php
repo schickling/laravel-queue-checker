@@ -20,8 +20,14 @@ class QueueCheckerServiceProvider extends ServiceProvider {
             return new Commands\QueueCheckerCommand();
         });
 
+        $this->app['queue.reset-check'] = $this->app->share(function($app)
+        {
+            return new Commands\QueueCheckerResetCommand();
+        });
+
         $this->commands(
-            'queue.check'
+            'queue.check',
+            'queue.reset-check'
             );
     }
 
