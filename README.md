@@ -19,8 +19,8 @@ Command to check the queue health status. Can be used with hosted monitoring sys
 
 ## Usage
 
-### Use a cronjob
-Run the following command as cronjob (for example each minute). If the queue isn't connected or does not work, the binded `ErrorHandler` will be notified. The default `ErrorHandler` will log the incident.
+### Run as cronjob
+Run the following command as a cronjob (for example each minute). If the queue isn't connected or does not work (e.g. jammed), the binded `ErrorHandler` will be notified. The default `ErrorHandler` will log the incident.
 
 ```sh
 $ php artisan queue:check
