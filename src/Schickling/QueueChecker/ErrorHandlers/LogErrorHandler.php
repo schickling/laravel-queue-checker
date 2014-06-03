@@ -4,8 +4,9 @@ use Log;
 
 class LogErrorHandler implements ErrorHandlerInterface
 {
-    public function handle($message)
+    public function handle($errorCode, $message)
     {
-        Log::error($message);
+        Log::error('Error Code: ' . $errorCode . '. Message: ' . $message);
     }
+
 }

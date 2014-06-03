@@ -1,6 +1,7 @@
 <?php
 
 use Schickling\QueueChecker\ErrorHandlers\LogErrorHandler;
+use Schickling\QueueChecker\ErrorHandlers\Errors;
 use Orchestra\Testbench\TestCase;
 use Mockery as m;
 
@@ -16,9 +17,9 @@ class LogErrorHandlerTest extends TestCase
     {
         $logErrorHandler = new LogErrorHandler();
 
-        Log::shouldReceive('error')->with('test message')->once();
+        Log::shouldReceive('error')->with('Error Code: 0. Message: test message')->once();
 
-        $logErrorHandler->handle('test message');
+        $logErrorHandler->handle(Errors::NOT_WORKING, 'test message');
     }
 
 

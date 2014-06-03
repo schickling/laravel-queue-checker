@@ -1,6 +1,7 @@
 <?php namespace Schickling\QueueChecker\Commands;
 
 use Illuminate\Console\Command;
+use Schickling\QueueChecker\ErrorHandlers\Errors;
 use Cache;
 use Queue;
 use App;
@@ -34,13 +35,13 @@ class QueueCheckerCommand extends Command
             else
             {
                 $errorHandler = App::make('Schickling\QueueChecker\ErrorHandlers\ErrorHandlerInterface');
-                $errorHandler->handle('Queue does not seem to be working.');
+                $errorHandler->handle(Errors::NOT_WORKING, 'Queue does not seem to be working.');
             }
         }
         else
         {
             $errorHandler = App::make('Schickling\QueueChecker\ErrorHandlers\ErrorHandlerInterface');
-            $errorHandler->handle('Queue is not connected.');
+            $errorHandler->handle(Errors::NOT_CONNECTED, 'Queue is not connected.');
         }
 
     }

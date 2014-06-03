@@ -2,5 +2,5 @@
 
 interface ErrorHandlerInterface
 {
-    public function handle($message);
+    public function handle($errorCode, $message);
 }
