@@ -1,6 +1,7 @@
 {
     "name": "schickling/queue-checker",
     "description": "Command to check the queue health status",
+    "licene": "MIT",
     "authors": [
         {
             "name": "Johannes Schickling",
